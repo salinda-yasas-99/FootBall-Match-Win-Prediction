@@ -9,9 +9,15 @@ import 'home.dart';
 
 // Define a StatefulWidget for TeamScreen
 class TeamScreen extends StatefulWidget {
-  final int country1;
-  final int country2;
-  const TeamScreen({Key? key, required this.country1, required this.country2})
+  final String ScrHomeTeam;
+  final String ScrawayTeam;
+  final Map<String, dynamic> UserData;
+
+  const TeamScreen(
+      {Key? key,
+      required this.ScrHomeTeam,
+      required this.ScrawayTeam,
+      required this.UserData})
       : super(key: key);
 
   @override
@@ -22,8 +28,30 @@ class TeamScreen extends StatefulWidget {
 class _TeamScreenState extends State<TeamScreen> {
   var dio = Dio(); // Dio instance for HTTP requests
 
-  String selectedCountryName = "ENG"; // Default selected country name
-  String selectedCountryName2 = "SCO"; // Default selected country name 2
+  // String selectedCountryName = "ENG"; // Default selected country name
+  // String selectedCountryName2 = "SCO"; // Default selected country name
+
+  //String selectedHomeTeam = "Argentina"; // Default selected country name
+  //String selectedAwayTeam = "Italy"; // Default selected country name 2
+
+  late String selectedHomeTeam;
+  late String selectedAwayTeam;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Assigning the passed values to selectedHomeTeam and selectedAwayTeam
+    selectedHomeTeam = widget.ScrHomeTeam;
+    selectedAwayTeam = widget.ScrawayTeam;
+
+    print("Home Team: $selectedHomeTeam");
+    print("Away Team: $selectedAwayTeam");
+    print("User Data: ${widget.UserData}");
+  }
+
+  List<String> selectedPlayersHome = [];
+  List<String> selectedPlayersAway = [];
 
   List<int> selectedIndices = []; // List to store selected indices for team 1
   List<int> selectedIndicesTeam2 =
@@ -81,32 +109,23 @@ class _TeamScreenState extends State<TeamScreen> {
                       ],
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30),
-                      child: DropdownButton<String>(
-                        value: selectedCountryName,
-                        items: NATIONS.map((String name) {
-                          return DropdownMenuItem<String>(
-                            child: Text(name),
-                            value: name,
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedCountryName = value!;
-                          });
-                        },
-                        icon: const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Icon(Icons.arrow_circle_down_sharp),
-                        ),
-                        iconEnabledColor: Colors.black,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                        dropdownColor: Colors.white,
-                        underline: Container(),
-                        isExpanded: true,
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            selectedHomeTeam, // Display the home team name here
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const Icon(
+                            Icons
+                                .sports_soccer, // You can change the icon if necessary
+                            color: Colors.black,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -114,39 +133,43 @@ class _TeamScreenState extends State<TeamScreen> {
 
                   // Checkbox list for selecting team 1 players
                   Container(
-                    height: size.height * 0.25,
+                    height: size.height * 0.28,
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (Player player
-                              in NATIONALPLAYER[selectedCountryName]!)
+                          for (String playerName
+                              in playersByCountry[selectedHomeTeam]!)
                             CheckboxListTile(
                               side: const BorderSide(
-                                  color: Colors.white, width: 2),
+                                color: Colors.white,
+                                width: 2,
+                              ),
                               activeColor: Colors.amber,
                               hoverColor: Colors.white,
                               checkColor: Colors.black,
                               title: Text(
-                                player.playerName,
+                                playerName,
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               subtitle: Text(
-                                player.nation,
+                                selectedHomeTeam, // You can show the country as subtitle
                                 style: TextStyle(
-                                    color: Colors.amber,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.amber,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              value: selectedIndices.contains(player.Index),
+                              value: selectedPlayersHome.contains(playerName),
                               onChanged: (bool? value) {
                                 setState(() {
                                   if (value != null) {
                                     if (value) {
-                                      selectedIndices.add(player.Index);
+                                      selectedPlayersHome.add(playerName);
                                     } else {
-                                      selectedIndices.remove(player.Index);
+                                      selectedPlayersHome.remove(playerName);
                                     }
                                   }
                                 });
@@ -158,8 +181,8 @@ class _TeamScreenState extends State<TeamScreen> {
                   ),
                   SizedBox(height: 20), // Vertical spacing
 
-                  // Dropdown for selecting team 2 country
-                  Container(
+                  // Dropdown for selecting away team 2 country
+                  DecoratedBox(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(50),
@@ -171,35 +194,27 @@ class _TeamScreenState extends State<TeamScreen> {
                       ],
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30),
-                      child: DropdownButton<String>(
-                        value: selectedCountryName2,
-                        items: NATIONS.map((String name) {
-                          return DropdownMenuItem<String>(
-                            child: Text(name),
-                            value: name,
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedCountryName2 = value!;
-                          });
-                        },
-                        icon: const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Icon(Icons.arrow_circle_down_sharp),
-                        ),
-                        iconEnabledColor: Colors.black,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                        dropdownColor: Colors.white,
-                        underline: Container(),
-                        isExpanded: true,
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            selectedAwayTeam, // Display the home team name here
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const Icon(
+                            Icons
+                                .sports_soccer, // You can change the icon if necessary
+                            color: Colors.black,
+                          ),
+                        ],
                       ),
                     ),
                   ),
+
                   SizedBox(height: 20), // Vertical spacing
 
                   // Checkbox list for selecting team 2 players
@@ -209,35 +224,38 @@ class _TeamScreenState extends State<TeamScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (Player player
-                              in NATIONALPLAYER[selectedCountryName2]!)
+                          for (String playerName
+                              in playersByCountry[selectedAwayTeam]!)
                             CheckboxListTile(
                               side: const BorderSide(
-                                  color: Colors.white, width: 2),
+                                color: Colors.white,
+                                width: 2,
+                              ),
                               activeColor: Colors.amber,
                               hoverColor: Colors.white,
                               checkColor: Colors.black,
                               title: Text(
-                                player.playerName,
+                                playerName,
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               subtitle: Text(
-                                player.nation,
+                                selectedAwayTeam, // You can show the country as subtitle
                                 style: TextStyle(
-                                    color: Colors.amber,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.amber,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              value:
-                                  selectedIndicesTeam2.contains(player.Index),
+                              value: selectedPlayersAway.contains(playerName),
                               onChanged: (bool? value) {
                                 setState(() {
                                   if (value != null) {
                                     if (value) {
-                                      selectedIndicesTeam2.add(player.Index);
+                                      selectedPlayersAway.add(playerName);
                                     } else {
-                                      selectedIndicesTeam2.remove(player.Index);
+                                      selectedPlayersAway.remove(playerName);
                                     }
                                   }
                                 });
@@ -252,14 +270,26 @@ class _TeamScreenState extends State<TeamScreen> {
                   // Button to predict and navigate to winner screen
                   ElevatedButton(
                     onPressed: () async {
+                      Map<String, dynamic> APIdata = {
+                        "home_team": widget.UserData['home_team'],
+                        "away_team": widget.UserData['away_team'],
+                        "year": widget.UserData['year'],
+                        "month": widget.UserData['month'],
+                        "day": widget.UserData['day'],
+                        "date": "2024/0703",
+                        "temperature": widget.UserData['temperature'],
+                        "home_players": selectedHomeTeam,
+                        "away_players": selectedPlayersAway
+                      };
+                      print('API data in team screen: ${APIdata}');
                       // Call API for prediction
-                      await getPrediction();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                WinnerScreen(winner: predictedWinner)),
-                      );
+                      //await getPrediction();
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) =>
+                      //           WinnerScreen(winner: predictedWinner)),
+                      // );
                     },
                     child: Text(
                       'Go Ahead',
@@ -277,6 +307,30 @@ class _TeamScreenState extends State<TeamScreen> {
                       foregroundColor: Colors.white,
                     ),
                   ),
+
+                  // New Button to print selected players
+                  ElevatedButton(
+                    onPressed: () {
+                      // Print the selected players for home and away teams
+                      print('Selected Home Team Players: $selectedPlayersHome');
+                      print('Selected Away Team Players: $selectedPlayersAway');
+                      print('User data in team screen: ${widget.UserData}');
+                    },
+                    child: Text(
+                      'Print Selected Players',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(size.width * 0.5, 50.0),
+                      backgroundColor:
+                          Colors.green[900], // Change button color if needed
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -287,19 +341,19 @@ class _TeamScreenState extends State<TeamScreen> {
   }
 
   // Method to call prediction API
-  Future<void> getPrediction() async {
-    PredictRequest request = PredictRequest(
-        team1: widget.country1,
-        team2: widget.country2,
-        players1: selectedIndices,
-        players2: selectedIndicesTeam2);
+  // Future<void> getPrediction() async {
+  //   PredictRequest request = PredictRequest(
+  //       team1: widget.country1,
+  //       team2: widget.country2,
+  //       players1: selectedIndices,
+  //       players2: selectedIndicesTeam2);
 
-    Response response =
-        await dio.post('http://10.0.2.2:8000/predict/', data: request.toJson());
+  //   Response response =
+  //       await dio.post('http://10.0.2.2:8000/predict/', data: request.toJson());
 
-    setState(() {
-      // Update predicted winner
-      predictedWinner = ResponseApi.fromJson(response.data).response;
-    });
-  }
+  //   setState(() {
+  //     // Update predicted winner
+  //     predictedWinner = ResponseApi.fromJson(response.data).response;
+  //   });
+  // }
 }

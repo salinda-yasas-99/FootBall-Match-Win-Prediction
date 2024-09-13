@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .utils import predict_outcome  # Import your prediction function
+from .utils import predict_result
 from .models import WinPrediction
 from .serializers import WinPredictionSerializer
 
@@ -15,12 +15,17 @@ def predict_win(request):
         year = int(request.data.get('year'))
         month = int(request.data.get('month'))
         day = int(request.data.get('day'))
+        date = str(request.data.get("date"))
         temperature = int(request.data.get('temperature'))
+        home_players = request.data.get('home_players',[])
+        away_players = request.data.get('away_players',[])
+        tournament = "Friendly"
+
 
         #print("before encode",home_team)
 
         # Ensure all required fields are present
-        if not all([home_team, away_team, year, month, day, temperature]):
+        if not all([home_team, away_team, year, month, day,date,home_players,away_players, temperature]):
             return Response({'error': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Call the predict_outcome function
@@ -28,7 +33,7 @@ def predict_win(request):
         # away_team_en = away_team.encode('utf-8')
         # print("after encode", home_team_en)
         # result = predict_outcome(home_team_en, away_team_en, year, month, day, temperature)
-        result = predict_outcome(home_team, away_team, year, month, day, temperature)
+        result = predict_result(date,home_team, away_team,tournament, temperature)
 
         # Save the data to the database
         prediction = WinPrediction(
@@ -37,6 +42,8 @@ def predict_win(request):
             year=year,
             month=month,
             day=day,
+            date=date,
+            top_player="messi",
             temperature=temperature,
             predicted_win=result  # Ensure this matches the field name in your model
         )
@@ -49,6 +56,7 @@ def predict_win(request):
             'year': year,
             'month': month,
             'day': day,
+            'date':date,
             'temperature': temperature,
             'prediction': result
         }, status=status.HTTP_200_OK)

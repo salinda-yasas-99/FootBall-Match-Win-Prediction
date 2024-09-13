@@ -17,8 +17,8 @@ class HomeScreen extends StatefulWidget {
 // Define the state for HomeScreen
 class _HomeScreenState extends State<HomeScreen> {
   // Initial selected country IDs
-  int selectedCountry1Id = 78;
-  int selectedCountry2Id = 39;
+  int selectedCountry1Id = 4;
+  int selectedCountry2Id = 70;
   DateTime selectedDate = DateTime.now();
   final _formKey = GlobalKey<FormState>(); // Key for form validation
   String temperature = ''; // Variable to hold the temperature input
@@ -261,7 +261,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     SizedBox(height: size.height * 0.1), // Vertical spacing
 
-                    // ElevatedButton to print the object
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
@@ -275,49 +274,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                   (country) => country.id == selectedCountry2Id)
                               .name;
 
-                          // Construct the object
                           Map<String, dynamic> matchData = {
                             "home_team": homeTeam,
                             "away_team": awayTeam,
                             "year": selectedDate.year,
                             "month": selectedDate.month,
                             "day": selectedDate.day,
+                            "date": "${selectedDate.day.toString().padLeft(2, '0')}/"
+                                "${selectedDate.month.toString().padLeft(2, '0')}/"
+                                "${selectedDate.year}",
                             "temperature": int.tryParse(temperature) ?? 0,
                           };
 
-                          // Print the object
-                          print(matchData);
-
-                          // Make the POST request
-                          // Make the POST request
-                          try {
-                            final response = await http.post(
-                              Uri.parse('http://localhost:8000/api/predict/'),
-                              headers: {"Content-Type": "application/json"},
-                              body: jsonEncode(matchData),
-                            );
-
-                            // Check if the request was successful
-                            if (response.statusCode == 200) {
-                              // Decode the response body
-                              final responseData = jsonDecode(response.body);
-                              print('Response data: $responseData');
-
-                              // Navigate to the WinnerScreen with the predicted winner
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WinnerScreen(
-                                      winner: responseData['prediction']),
-                                ),
-                              );
-                            } else {
-                              print(
-                                  'Failed to get prediction. Status code: ${response.statusCode}');
-                            }
-                          } catch (error) {
-                            print('Error occurred: $error');
-                          }
+                          Navigator.pushReplacement(
+                            context,
+                            // MaterialPageRoute(
+                            //   builder: (context) => WinnerScreen(
+                            //       winner: responseData['prediction']),
+                            // ),
+                            MaterialPageRoute(
+                              builder: (context) => TeamScreen(
+                                ScrHomeTeam: homeTeam,
+                                ScrawayTeam: awayTeam,
+                                UserData: matchData,
+                              ),
+                            ),
+                          );
                         }
                       },
                       child: Text(
@@ -333,6 +315,144 @@ class _HomeScreenState extends State<HomeScreen> {
                           50.0,
                         ),
                         backgroundColor: Colors.blue[900],
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+
+                    // ElevatedButton to print the object
+                    // ElevatedButton(
+                    //   onPressed: () async {
+                    //     if (_formKey.currentState!.validate()) {
+                    //       // Find the selected countries based on their IDs
+                    //       String homeTeam = COUNTRIES
+                    //           .firstWhere(
+                    //               (country) => country.id == selectedCountry1Id)
+                    //           .name;
+                    //       String awayTeam = COUNTRIES
+                    //           .firstWhere(
+                    //               (country) => country.id == selectedCountry2Id)
+                    //           .name;
+
+                    //       Navigator.pushReplacement(
+                    //         context,
+                    //         // MaterialPageRoute(
+                    //         //   builder: (context) => WinnerScreen(
+                    //         //       winner: responseData['prediction']),
+                    //         // ),
+                    //         MaterialPageRoute(
+                    //           builder: (context) => TeamScreen(
+                    //             country1: 1,
+                    //             country2: 2,
+                    //           ),
+                    //         ),
+                    //       );
+
+                    //       //Construct the object
+                    //       Map<String, dynamic> matchData = {
+                    //         "home_team": homeTeam,
+                    //         "away_team": awayTeam,
+                    //         "year": selectedDate.year,
+                    //         "month": selectedDate.month,
+                    //         "day": selectedDate.day,
+                    //         "temperature": int.tryParse(temperature) ?? 0,
+                    //       };
+
+                    //       //Print the object
+                    //       print(matchData);
+
+                    //       //Make the POST request
+                    //       try {
+                    //         final response = await http.post(
+                    //           Uri.parse('http://localhost:8000/api/predict/'),
+                    //           headers: {"Content-Type": "application/json"},
+                    //           body: jsonEncode(matchData),
+                    //         );
+
+                    //         //Check if the request was successful
+                    //         if (response.statusCode == 200) {
+                    //           // Decode the response body
+                    //           final responseData = jsonDecode(response.body);
+                    //           print('Response data: $responseData');
+
+                    //           //Navigate to the WinnerScreen with the predicted winner
+                    //           Navigator.pushReplacement(
+                    //             context,
+                    //             MaterialPageRoute(
+                    //               builder: (context) => WinnerScreen(
+                    //                   winner: responseData['prediction']),
+                    //             ),
+                    //             MaterialPageRoute(
+                    //               builder: (context) => TeamScreen(
+                    //                 country1: 1,
+                    //                 country2: 2,
+                    //               ),
+                    //             ),
+                    //           );
+                    //         } else {
+                    //           print(
+                    //               'Failed to get prediction. Status code: ${response.statusCode}');
+                    //           print('Failed to get prediction.');
+                    //         }
+                    //       } catch (error) {
+                    //         print('Error occurred: $error');
+                    //       }
+                    //     }
+                    //   },
+                    //   child: Text(
+                    //     'Go Ahead',
+                    //     style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontWeight: FontWeight.w500,
+                    //         fontSize: 20),
+                    //   ),
+                    //   style: ElevatedButton.styleFrom(
+                    //     minimumSize: Size(
+                    //       size.width * 0.5,
+                    //       50.0,
+                    //     ),
+                    //     backgroundColor: Colors.blue[900],
+                    //     foregroundColor: Colors.white,
+                    //   ),
+                    // ),
+
+                    //Print seleted values
+                    ElevatedButton(
+                      onPressed: () {
+                        String homeTeam = COUNTRIES
+                            .firstWhere(
+                                (country) => country.id == selectedCountry1Id)
+                            .name;
+                        String awayTeam = COUNTRIES
+                            .firstWhere(
+                                (country) => country.id == selectedCountry2Id)
+                            .name;
+                        Map<String, dynamic> matchData = {
+                          "home_team": homeTeam,
+                          "away_team": awayTeam,
+                          "year": selectedDate.year,
+                          "month": selectedDate.month,
+                          "day": selectedDate.day,
+                          "date": "${selectedDate.day.toString().padLeft(2, '0')}/"
+                              "${selectedDate.month.toString().padLeft(2, '0')}/"
+                              "${selectedDate.year}",
+                          "temperature": int.tryParse(temperature) ?? 0,
+                        };
+
+                        //Print the object
+                        print(matchData);
+                      },
+                      child: Text(
+                        'Print seleted values',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.5, 50.0),
+                        backgroundColor:
+                            Colors.green[900], // Change button color if needed
                         foregroundColor: Colors.white,
                       ),
                     ),

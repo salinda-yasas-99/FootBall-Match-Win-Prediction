@@ -2284,3 +2284,34 @@ Map<String, List<Player>> NATIONALPLAYER = {
     Player(playerName: 'Jordan Zemura', nation: 'ZIM', Index: 403)
   ]
 };
+
+const Map<String, List<String>> playersByCountry = {
+  "Argentina": [
+    "L. Messi",
+    "A. Correa",
+    "L. Biglia",
+    "G. Rulli",
+    "J. Correa",
+    "L. Paredes",
+    "I. Marcone",
+    "M. Zaracho",
+    "M. Vargas",
+    "G. Simeone",
+    "L. Miranda",
+    "J. Palomino"
+  ],
+  "Italy": [
+    "L. Insigne",
+    "M. Politano",
+    "A. Izzo",
+    "N. Barella",
+    "M. Caldara",
+    "B. Cristante",
+    "D. Berardi",
+    "R. Gagliardini",
+    "V. Grifo",
+    "R. Soriano",
+    "Emerson",
+    "M. Benassi"
+  ],
+};

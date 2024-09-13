@@ -679,5 +679,429 @@ namespace ExcelApp.Controllers
                 }
             }
         }
+
+
+        [HttpPost("plyers-dataset-ordering")]
+        public async Task<IActionResult> PlayersDataSetOrdering(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            string[] allowedCountries = [
+                "Scotland",
+                "England",
+                "Wales",
+                "Northern Ireland",
+                "United States",
+                "Canada",
+                "Uruguay",
+                "Argentina",
+                "Austria",
+                "Hungary",
+                "Czechoslovakia",
+                "Belgium",
+                "France",
+                "Switzerland",
+                "Guernsey",
+                "Alderney",
+                "Jersey",
+                "Netherlands",
+                "Germany",
+                "Sweden",
+                "Norway",
+                "Italy",
+                "Chile",
+                "Finland",
+                "Luxembourg",
+                "Catalonia",
+                "Russia",
+                "Denmark",
+                "Philippines",
+                "China PR",
+                "Brazil",
+                "Basque Country",
+                "Japan",
+                "Paraguay",
+                "Estonia",
+                "Provence",
+                "Costa Rica",
+                "El Salvador",
+                "Guatemala",
+                "Yugoslavia",
+                "Poland",
+                "Spain",
+                "Portugal",
+                "Brittany",
+                "Romania",
+                "New Zealand",
+                "Australia",
+                "Latvia",
+                "Galicia",
+                "Central Spain",
+                "Mexico",
+                "Andalusia",
+                "Asturias",
+                "Lithuania",
+                "Turkey",
+                "Aruba",
+                "CuraÃ§ao",
+                "Bulgaria",
+                "Egypt",
+                "Republic of Ireland",
+                "South Africa",
+                "Haiti",
+                "Jamaica",
+                "Kenya",
+                "Uganda",
+                "Bolivia",
+                "Peru",
+                "Honduras",
+                "Guyana",
+                "Trinidad and Tobago",
+                "Belarus",
+                "Ukraine",
+                "Barbados",
+                "Nicaragua",
+                "Greece",
+                "Cuba",
+                "Martinique",
+                "Dominica",
+                "Silesia",
+                "Guadeloupe",
+                "Israel",
+                "Indonesia",
+                "Suriname",
+                "French Guiana",
+                "Saint Lucia",
+                "Colombia",
+                "Panama",
+                "Venezuela",
+                "Ecuador",
+                "Saint Kitts and Nevis",
+                "Grenada",
+                "India",
+                "Slovakia",
+                "Manchukuo",
+                "Croatia",
+                "Lebanon",
+                "Puerto Rico",
+                "Afghanistan",
+                "Iran",
+                "Mongolia",
+                "Tanzania",
+                "Zimbabwe",
+                "Zambia",
+                "Iceland",
+                "Albania",
+                "Montenegro",
+                "Madagascar",
+                "Mauritius",
+                "RÃ©union",
+                "Zanzibar",
+                "Djibouti",
+                "Ethiopia",
+                "DR Congo",
+                "South Korea",
+                "Vietnam",
+                "Macau",
+                "Dominican Republic",
+                "Cyprus",
+                "Sierra Leone",
+                "Nigeria",
+                "Syria",
+                "Serbia",
+                "Taiwan",
+                "Ghana",
+                "Burma",
+                "New Caledonia",
+                "Vanuatu",
+                "Fiji",
+                "Myanmar",
+                "Pakistan",
+                "Sri Lanka",
+                "German DR",
+                "Tahiti",
+                "Gambia",
+                "Hong Kong",
+                "Singapore",
+                "Malaysia",
+                "Guinea-Bissau",
+                "Saarland",
+                "Burundi",
+                "Kernow",
+                "Cambodia",
+                "Thailand",
+                "Vietnam Republic",
+                "Kyrgyzstan",
+                "Moldova",
+                "North Vietnam",
+                "Togo",
+                "North Korea",
+                "Sudan",
+                "Malta",
+                "Tunisia",
+                "Libya",
+                "Malawi",
+                "Morocco",
+                "Malaya",
+                "Benin",
+                "Cape Verde",
+                "Cameroon",
+                "Central African Republic",
+                "Mali",
+                "Gabon",
+                "Burkina Faso",
+                "Ivory Coast",
+                "Congo",
+                "Iraq",
+                "Saint Vincent and the Grenadines",
+                "Senegal",
+                "Laos",
+                "Mauritania",
+                "Liberia",
+                "Chad",
+                "Niger",
+                "Guinea",
+                "Algeria",
+                "Kuwait",
+                "Jordan",
+                "Papua New Guinea",
+                "Solomon Islands",
+                "Somalia",
+                "Saudi Arabia",
+                "Bermuda",
+                "Palestine",
+                "Yemen",
+                "Bahrain",
+                "Oman",
+                "Wallis Islands and Futuna",
+                "Corsica",
+                "Western Australia",
+                "Eswatini",
+                "Botswana",
+                "Qatar",
+                "Lesotho",
+                "Bahamas",
+                "Brunei",
+                "Cook Islands",
+                "Yemen DPR",
+                "United Arab Emirates",
+                "Faroe Islands",
+                "Nepal",
+                "Antigua and Barbuda",
+                "Bangladesh",
+                "Seychelles",
+                "Equatorial Guinea",
+                "Mozambique",
+                "Guam",
+                "Angola",
+                "SÃ£o TomÃ© and PrÃ­ncipe",
+                "Rwanda",
+                "Northern Cyprus",
+                "Armenia",
+                "Georgia",
+                "Azerbaijan",
+                "Kazakhstan",
+                "Comoros",
+                "Maldives",
+                "Tonga",
+                "Kiribati",
+                "Tuvalu",
+                "Samoa",
+                "Greenland",
+                "Liechtenstein",
+                "Western Samoa",
+                "Bhutan",
+                "South Yemen",
+                "Niue",
+                "American Samoa",
+                "Belize",
+                "Cayman Islands",
+                "Anguilla",
+                "British Virgin Islands",
+                "Palau",
+                "Sint Maarten",
+                "Namibia",
+                "Ynys MÃ´n",
+                "Shetland",
+                "Ã…land Islands",
+                "Saint Martin",
+                "San Marino",
+                "Montserrat",
+                "Slovenia",
+                "Isle of Wight",
+                "Turkmenistan",
+                "Tajikistan",
+                "Uzbekistan",
+                "Eritrea",
+                "Czech Republic",
+                "Gibraltar",
+                "Isle of Man",
+                "North Macedonia",
+                "Bosnia and Herzegovina",
+                "Canary Islands",
+                "Andorra",
+                "FrÃ¸ya",
+                "Hitra",
+                "United States Virgin Islands",
+                "Northern Mariana Islands",
+                "Turks and Caicos Islands",
+                "Micronesia",
+                "Gotland",
+                "Saare County",
+                "Rhodes",
+                "Monaco",
+                "Tibet",
+                "Orkney",
+                "Falkland Islands",
+                "Mayotte",
+                "Vatican City",
+                "Timor-Leste",
+                "Sark",
+                "Sealand",
+                "Occitania",
+                "Chechnya",
+                "Ambazonia",
+                "Western Isles",
+                "Kosovo",
+                "Republic of St. Pauli",
+                "GÄƒgÄƒuzia",
+                "Crimea",
+                "SÃ¡pmi",
+                "Romani people",
+                "Menorca",
+                "Iraqi Kurdistan",
+                "Padania",
+                "Arameans Suryoye",
+                "Gozo",
+                "Two Sicilies",
+                "Saint BarthÃ©lemy",
+                "Saint Pierre and Miquelon",
+                "Bonaire",
+                "Chagos Islands",
+                "Raetia",
+                "Cilento",
+                "Western Sahara",
+                "Darfur",
+                "Tamil Eelam",
+                "South Sudan",
+                "Abkhazia",
+                "Artsakh",
+                "Madrid",
+                "Saugeais",
+                "Ellan Vannin",
+                "Somaliland",
+                "Franconia",
+                "South Ossetia",
+                "County of Nice",
+                "Seborga",
+                "SzÃ©kely Land",
+                "Luhansk PR",
+                "Donetsk PR",
+                "FelvidÃ©k",
+                "Panjab",
+                "Western Armenia",
+                "United Koreans in Japan",
+                "KÃ¡rpÃ¡talja",
+                "DÃ©lvidÃ©k",
+                "Barawa",
+                "RyÅ«kyÅ«",
+                "Yorkshire",
+                "Surrey",
+                "Cascadia",
+                "Matabeleland",
+                "Kabylia",
+                "Parishes of Jersey",
+                "Chameria",
+                "Saint Helena",
+                "East Timor",
+                "Yoruba Nation",
+                "Biafra",
+                "Mapuche",
+                "Maule Sur",
+                "Aymara",
+                "Elba Island",
+                "West Papua",
+                "Ticino",
+                "Hmong"
+            ];
+
+            using (var stream = new MemoryStream())
+            {
+                // Copy the uploaded file to a memory stream
+                await file.CopyToAsync(stream);
+                stream.Position = 0;
+
+                using (var stream2 = new MemoryStream())
+                {
+                    // Copy the uploaded file to a memory stream
+                    await file.CopyToAsync(stream2);
+                    stream2.Position = 0;
+
+                    using (var workbook = new XLWorkbook(stream))
+                    {
+                        var worksheet = workbook.Worksheets.First();
+
+                        // Identify the relevant columns
+                        var nationalityColumn = worksheet.Column("I"); // Assume nationality is in column 'I'
+
+                        // Create a new worksheet for the filtered and grouped data
+                        var newWorksheet = workbook.Worksheets.Add("Grouped by Country");
+
+                        // Add headers to the new worksheet
+                        var lastColumn = worksheet.LastColumnUsed().ColumnNumber();
+                        for (int col = 1; col <= lastColumn; col++)
+                        {
+                            newWorksheet.Cell(1, col).Value = worksheet.Cell(1, col).Value;
+                        }
+
+                        int newRow = 2;
+
+                        // Create a list to hold all rows from the Excel sheet
+                        var playerData = new List<IXLRangeRow>();
+
+                        // Loop through rows and add them to the list if they match allowed countries
+                        for (int row = 2; row <= worksheet.LastRowUsed().RowNumber(); row++)
+                        {
+                            var nationality = worksheet.Cell(row, 9).GetValue<string>(); // Assuming nationality is in the 9th column ('I')
+
+                            // Only include rows with nationalities in the allowedCountries array
+                            if (allowedCountries.Contains(nationality))
+                            {
+                                var rangeRow = worksheet.Range(worksheet.Row(row).FirstCell(), worksheet.Row(row).LastCell()).AsRange().FirstRow();
+                                playerData.Add(rangeRow);
+                            }
+                        }
+
+                        // Sort the playerData list by nationality
+                        var sortedPlayerData = playerData
+                            .OrderBy(row => row.Cell(9).GetValue<string>()) // Sort by the nationality column (column 9)
+                            .ToList();
+
+                        // Write the sorted player data to the new worksheet
+                        foreach (var playerRow in sortedPlayerData)
+                        {
+                            for (int col = 1; col <= lastColumn; col++)
+                            {
+                                newWorksheet.Cell(newRow, col).Value = playerRow.Cell(col).Value;
+                            }
+                            newRow++;
+                        }
+
+                        // Save the modified Excel file to a memory stream
+                        var outputStream = new MemoryStream();
+                        workbook.SaveAs(outputStream);
+                        outputStream.Position = 0;
+
+                        // Return the new Excel file
+                        var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        var fileName = "grouped_players_by_country.xlsx";
+                        return File(outputStream, contentType, fileName);
+                    }
+                }
+            }
+        }
     }
 }
