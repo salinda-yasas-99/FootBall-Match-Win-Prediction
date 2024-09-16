@@ -15,3 +15,18 @@ class WinPrediction(models.Model):
 
     def __str__(self):
         return f'{self.home_team} ({self.away_team}, {self.year},{self.month},{self.day},{self.temperature},{self.top_player},{self.date}) -> {self.predicted_win}'
+
+
+class Player(models.Model):
+    short_name = models.CharField(max_length=1000)
+    age =models.IntegerField(default=25)
+    overall = models.IntegerField(default=25)
+    skill_moves = models.IntegerField(default=25)
+    international_reputation = models.IntegerField(default=25)
+    attacking_crossing = models.IntegerField(default=25)
+    attacking_finishing = models.IntegerField(default=25)
+    attacking_heading_accuracy = models.IntegerField(default=25)
+
+
+    def __str__(self):
+        return self.short_name

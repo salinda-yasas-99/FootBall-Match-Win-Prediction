@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:soccer_win/models/predictResponse.model.dart';
 import 'package:soccer_win/screens/winner.dart';
+import 'package:http/http.dart' as http;
 
 import '../common/const.dart';
 import '../models/predictRequest.model.dart';
@@ -278,7 +281,7 @@ class _TeamScreenState extends State<TeamScreen> {
                         "day": widget.UserData['day'],
                         "date": "2024/0703",
                         "temperature": widget.UserData['temperature'],
-                        "home_players": selectedHomeTeam,
+                        "home_players": selectedPlayersHome,
                         "away_players": selectedPlayersAway
                       };
                       print('API data in team screen: ${APIdata}');
@@ -290,6 +293,36 @@ class _TeamScreenState extends State<TeamScreen> {
                       //       builder: (context) =>
                       //           WinnerScreen(winner: predictedWinner)),
                       // );
+                      try {
+                        final response = await http.post(
+                          Uri.parse('http://localhost:8000/api/predict/'),
+                          headers: {"Content-Type": "application/json"},
+                          body: jsonEncode(APIdata),
+                        );
+
+                        //Check if the request was successful
+                        if (response.statusCode == 200) {
+                          // Decode the response body
+                          final responseData = jsonDecode(response.body);
+                          print('Response data: $responseData');
+
+                          //Navigate to the WinnerScreen with the predicted winner
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WinnerScreen(
+                                  // winner: responseData['prediction']),
+                                  winner: responseData),
+                            ),
+                          );
+                        } else {
+                          print(
+                              'Failed to get prediction. Status code: ${response.statusCode}');
+                          print('Failed to get prediction.');
+                        }
+                      } catch (error) {
+                        print('Error occurred: $error');
+                      }
                     },
                     child: Text(
                       'Go Ahead',

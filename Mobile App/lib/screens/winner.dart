@@ -3,7 +3,7 @@ import 'package:soccer_win/screens/home.dart';
 
 // Define a StatefulWidget for WinnerScreen
 class WinnerScreen extends StatefulWidget {
-  final String winner;
+  final Map<String, dynamic> winner;
   const WinnerScreen({Key? key, required this.winner}) : super(key: key);
   @override
   _WinnerScreenState createState() => _WinnerScreenState();
@@ -64,7 +64,24 @@ class _WinnerScreenState extends State<WinnerScreen> {
                   height: 20,
                 ), // Vertical spacing
                 Text(
-                  widget.winner, // Display predicted winner
+                  widget.winner['prediction'] ?? 'No prediction available',
+                  style: TextStyle(
+                      color: const Color.fromARGB(255, 153, 34, 34),
+                      fontSize: 40),
+                ),
+                SizedBox(
+                  height: 20,
+                ), // Vertical spacing
+                Text(
+                  "Top Player : ",
+                  style: TextStyle(color: Colors.white, fontSize: 40),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  widget.winner['player']?['short_name'] ??
+                      'No player info available',
                   style: TextStyle(color: Colors.white, fontSize: 40),
                 ),
               ],
