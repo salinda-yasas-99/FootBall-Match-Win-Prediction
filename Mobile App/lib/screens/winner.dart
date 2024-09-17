@@ -37,7 +37,8 @@ class _WinnerScreenState extends State<WinnerScreen> {
           padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/football_background.jpg"),
+              // image: AssetImage("assets/football_background.jpg"),
+              image: AssetImage("assets/green_background.jpg"),
               fit: BoxFit.cover,
             ),
           ),
@@ -65,9 +66,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                 ), // Vertical spacing
                 Text(
                   widget.winner['prediction'] ?? 'No prediction available',
-                  style: TextStyle(
-                      color: const Color.fromARGB(255, 153, 34, 34),
-                      fontSize: 40),
+                  style: TextStyle(color: Colors.white, fontSize: 40),
                 ),
                 SizedBox(
                   height: 20,
