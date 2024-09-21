@@ -416,46 +416,46 @@ class _HomeScreenState extends State<HomeScreen> {
                     // ),
 
                     //Print seleted values
-                    ElevatedButton(
-                      onPressed: () {
-                        String homeTeam = COUNTRIES
-                            .firstWhere(
-                                (country) => country.id == selectedCountry1Id)
-                            .name;
-                        String awayTeam = COUNTRIES
-                            .firstWhere(
-                                (country) => country.id == selectedCountry2Id)
-                            .name;
-                        Map<String, dynamic> matchData = {
-                          "home_team": homeTeam,
-                          "away_team": awayTeam,
-                          "year": selectedDate.year,
-                          "month": selectedDate.month,
-                          "day": selectedDate.day,
-                          "date": "${selectedDate.day.toString().padLeft(2, '0')}/"
-                              "${selectedDate.month.toString().padLeft(2, '0')}/"
-                              "${selectedDate.year}",
-                          "temperature": int.tryParse(temperature) ?? 0,
-                        };
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     String homeTeam = COUNTRIES
+                    //         .firstWhere(
+                    //             (country) => country.id == selectedCountry1Id)
+                    //         .name;
+                    //     String awayTeam = COUNTRIES
+                    //         .firstWhere(
+                    //             (country) => country.id == selectedCountry2Id)
+                    //         .name;
+                    //     Map<String, dynamic> matchData = {
+                    //       "home_team": homeTeam,
+                    //       "away_team": awayTeam,
+                    //       "year": selectedDate.year,
+                    //       "month": selectedDate.month,
+                    //       "day": selectedDate.day,
+                    //       "date": "${selectedDate.day.toString().padLeft(2, '0')}/"
+                    //           "${selectedDate.month.toString().padLeft(2, '0')}/"
+                    //           "${selectedDate.year}",
+                    //       "temperature": int.tryParse(temperature) ?? 0,
+                    //     };
 
-                        //Print the object
-                        print(matchData);
-                      },
-                      child: Text(
-                        'Print seleted values',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(size.width * 0.5, 50.0),
-                        backgroundColor:
-                            Colors.green[900], // Change button color if needed
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
+                    //     //Print the object
+                    //     print(matchData);
+                    //   },
+                    //   child: Text(
+                    //     'Print seleted values',
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 20,
+                    //     ),
+                    //   ),
+                    //   style: ElevatedButton.styleFrom(
+                    //     minimumSize: Size(size.width * 0.5, 50.0),
+                    //     backgroundColor:
+                    //         Colors.green[900], // Change button color if needed
+                    //     foregroundColor: Colors.white,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
