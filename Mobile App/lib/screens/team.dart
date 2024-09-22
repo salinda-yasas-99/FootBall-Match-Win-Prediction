@@ -278,7 +278,9 @@ class _TeamScreenState extends State<TeamScreen> {
                             print('API data in team screen: $APIdata');
                             try {
                               final response = await http.post(
-                                Uri.parse('http://localhost:8000/api/predict/'),
+                                // Uri.parse('http://localhost:8000/api/predict/'),
+                                Uri.parse(
+                                    'https://cd19-192-248-2-10.ngrok-free.app/api/predict/'),
                                 headers: {"Content-Type": "application/json"},
                                 body: jsonEncode(APIdata),
                               );

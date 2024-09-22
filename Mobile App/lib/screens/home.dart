@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Initial selected country IDs
   int selectedCountry1Id = 4;
-  int selectedCountry2Id = 70;
+  int selectedCountry2Id = 13;
   DateTime selectedDate = DateTime.now();
   final _formKey = GlobalKey<FormState>(); // Key for form validation
   String temperature = ''; // Variable to hold the temperature input
@@ -153,8 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: EdgeInsets.only(left: 30, right: 30),
                         child: DropdownButton<int>(
                           value: selectedCountry2Id, // Selected value
-                          items: COUNTRIES.map((Country country) {
-                            // Mapping countries to dropdown items
+                          items: COUNTRIES
+                              .where(
+                                  (country) => country.id != selectedCountry1Id)
+                              .map((Country country) {
+                            // Mapping countries to dropdown items, excluding the selected one
                             return DropdownMenuItem<int>(
                               child: Text(country.name),
                               value: country.id,
@@ -182,6 +185,44 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+                    // DecoratedBox(
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     borderRadius: BorderRadius.circular(50),
+                    //   ),
+                    //   child: Padding(
+                    //     padding: EdgeInsets.only(left: 30, right: 30),
+                    //     child: DropdownButton<int>(
+                    //       value: selectedCountry2Id, // Selected value
+                    //       items: COUNTRIES.map((Country country) {
+                    //         // Mapping countries to dropdown items
+                    //         return DropdownMenuItem<int>(
+                    //           child: Text(country.name),
+                    //           value: country.id,
+                    //         );
+                    //       }).toList(),
+                    //       onChanged: (value) {
+                    //         // Update selected country ID
+                    //         setState(() {
+                    //           selectedCountry2Id = value!;
+                    //         });
+                    //         print("You have selected Country ID $value");
+                    //       },
+                    //       icon: const Padding(
+                    //         padding: EdgeInsets.only(left: 20),
+                    //         child: Icon(Icons.arrow_circle_down_sharp),
+                    //       ),
+                    //       iconEnabledColor: Colors.black,
+                    //       style: const TextStyle(
+                    //         color: Colors.black,
+                    //         fontSize: 20,
+                    //       ),
+                    //       dropdownColor: Colors.white,
+                    //       underline: Container(),
+                    //       isExpanded: true,
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(height: 20), // Vertical spacing
 
                     // Text field for city average temperature
