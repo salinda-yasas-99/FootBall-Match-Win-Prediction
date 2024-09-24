@@ -257,57 +257,152 @@ class _TeamScreenState extends State<TeamScreen> {
                         SizedBox(height: 20), // Vertical spacing
 
                         // Button to predict and navigate to winner screen
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     setState(() {
+                        //       _isLoading = true; // Start loading
+                        //     });
+
+                        //     Map<String, dynamic> APIdata = {
+                        //       "home_team": widget.UserData['home_team'],
+                        //       "away_team": widget.UserData['away_team'],
+                        //       "year": widget.UserData['year'],
+                        //       "month": widget.UserData['month'],
+                        //       "day": widget.UserData['day'],
+                        //       "date": "2024/0703",
+                        //       "temperature": widget.UserData['temperature'],
+                        //       "home_players": selectedPlayersHome,
+                        //       "away_players": selectedPlayersAway
+                        //     };
+
+                        //     print('API data in team screen: $APIdata');
+                        //     try {
+                        //       final response = await http.post(
+                        //         Uri.parse('http://localhost:8000/api/predict/'),
+                        //         // Uri.parse(
+                        //         //     'https://cd19-192-248-2-10.ngrok-free.app/api/predict/'),
+                        //         headers: {"Content-Type": "application/json"},
+                        //         body: jsonEncode(APIdata),
+                        //       );
+
+                        //       // Check if the request was successful
+                        //       if (response.statusCode == 200) {
+                        //         final responseData = jsonDecode(response.body);
+                        //         print('Response data: $responseData');
+
+                        //         // Navigate to the WinnerScreen with the predicted winner
+                        //         Navigator.pushReplacement(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 WinnerScreen(winner: responseData),
+                        //           ),
+                        //         );
+                        //       } else {
+                        //         print(
+                        //             'Failed to get prediction. Status code: ${response.statusCode}');
+                        //       }
+                        //     } catch (error) {
+                        //       print('Error occurred: $error');
+                        //     } finally {
+                        //       setState(() {
+                        //         _isLoading = false; // Stop loading
+                        //       });
+                        //     }
+                        //   },
+                        //   child: Text(
+                        //     'Go Ahead',
+                        //     style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontWeight: FontWeight.w500,
+                        //         fontSize: 20),
+                        //   ),
+                        //   style: ElevatedButton.styleFrom(
+                        //     minimumSize: Size(
+                        //       size.width * 0.5,
+                        //       50,
+                        //     ),
+                        //     backgroundColor: Colors.amber,
+                        //   ),
+                        // ),
+                        // Inside the onPressed function of the 'Go Ahead' button
+
                         ElevatedButton(
                           onPressed: () async {
-                            setState(() {
-                              _isLoading = true; // Start loading
-                            });
-
-                            Map<String, dynamic> APIdata = {
-                              "home_team": widget.UserData['home_team'],
-                              "away_team": widget.UserData['away_team'],
-                              "year": widget.UserData['year'],
-                              "month": widget.UserData['month'],
-                              "day": widget.UserData['day'],
-                              "date": "2024/0703",
-                              "temperature": widget.UserData['temperature'],
-                              "home_players": selectedPlayersHome,
-                              "away_players": selectedPlayersAway
-                            };
-
-                            print('API data in team screen: $APIdata');
-                            try {
-                              final response = await http.post(
-                                Uri.parse('http://localhost:8000/api/predict/'),
-                                // Uri.parse(
-                                //     'https://cd19-192-248-2-10.ngrok-free.app/api/predict/'),
-                                headers: {"Content-Type": "application/json"},
-                                body: jsonEncode(APIdata),
+                            // Check if players are selected for both teams
+                            if (selectedPlayersHome.isEmpty ||
+                                selectedPlayersAway.isEmpty) {
+                              // Show an alert dialog if no players are selected for either team
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Select Players"),
+                                    content: Text(
+                                        "Please select players for both teams."),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
-
-                              // Check if the request was successful
-                              if (response.statusCode == 200) {
-                                final responseData = jsonDecode(response.body);
-                                print('Response data: $responseData');
-
-                                // Navigate to the WinnerScreen with the predicted winner
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        WinnerScreen(winner: responseData),
-                                  ),
-                                );
-                              } else {
-                                print(
-                                    'Failed to get prediction. Status code: ${response.statusCode}');
-                              }
-                            } catch (error) {
-                              print('Error occurred: $error');
-                            } finally {
+                            } else {
                               setState(() {
-                                _isLoading = false; // Stop loading
+                                _isLoading = true; // Start loading
                               });
+
+                              // Prepare the API data
+                              Map<String, dynamic> APIdata = {
+                                "home_team": widget.UserData['home_team'],
+                                "away_team": widget.UserData['away_team'],
+                                "year": widget.UserData['year'],
+                                "month": widget.UserData['month'],
+                                "day": widget.UserData['day'],
+                                "date": "2024/0703",
+                                "temperature": widget.UserData['temperature'],
+                                "home_players": selectedPlayersHome,
+                                "away_players": selectedPlayersAway
+                              };
+
+                              print('API data in team screen: $APIdata');
+                              try {
+                                final response = await http.post(
+                                  Uri.parse(
+                                      'http://localhost:8000/api/predict/'),
+                                  headers: {"Content-Type": "application/json"},
+                                  body: jsonEncode(APIdata),
+                                );
+
+                                // Check if the request was successful
+                                if (response.statusCode == 200) {
+                                  final responseData =
+                                      jsonDecode(response.body);
+                                  print('Response data: $responseData');
+
+                                  // Navigate to the WinnerScreen with the predicted winner
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          WinnerScreen(winner: responseData),
+                                    ),
+                                  );
+                                } else {
+                                  print(
+                                      'Failed to get prediction. Status code: ${response.statusCode}');
+                                }
+                              } catch (error) {
+                                print('Error occurred: $error');
+                              } finally {
+                                setState(() {
+                                  _isLoading = false; // Stop loading
+                                });
+                              }
                             }
                           },
                           child: Text(
@@ -318,10 +413,7 @@ class _TeamScreenState extends State<TeamScreen> {
                                 fontSize: 20),
                           ),
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(
-                              size.width * 0.5,
-                              50,
-                            ),
+                            minimumSize: Size(size.width * 0.5, 50),
                             backgroundColor: Colors.amber,
                           ),
                         ),

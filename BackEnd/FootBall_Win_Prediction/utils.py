@@ -12,8 +12,8 @@ def load_keras_model():
     model_path = os.path.join(settings.BASE_DIR, 'Ml_Models_2', 'saved_model.h5')
     try:
         model1 = tf.keras.models.load_model(model_path)
-        model1.summary()
-        print("Model successfully loaded.")
+        # model1.summary()
+        # print("Model successfully loaded.")
         return model1
     except Exception as e:
         print(f"Error loading model: {str(e)}")
@@ -24,8 +24,8 @@ def load_player_keras_model():
     model_path = os.path.join(settings.BASE_DIR, 'Ml_Models_2', 'player_saved_model.h5')
     try:
         model2 = tf.keras.models.load_model(model_path)
-        model2.summary()
-        print("Player Model successfully loaded.")
+        # model2.summary()
+        # print("Player Model successfully loaded.")
         return model2
     except Exception as e:
         print(f"Error loading model: {str(e)}")
