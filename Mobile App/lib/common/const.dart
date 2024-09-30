@@ -2716,18 +2716,18 @@ const Map<String, List<String>> playersByCountry = {
     "R. Rojas"
   ],
   "Slovakia": [
-    "M. Škriniar",
-    "M. Hamšík",
-    "M. Dúbravka",
+    "L. Guldan",
     "S. Lobotka",
-    "M. Škrtel",
     "O. Duda",
-    "P. Hrošovský",
     "J. Kucka",
-    "A. Rusnák",
     "M. Stoch",
-    "P. Pekarík",
-    "L. Haraslín"
+    "M. Valjent",
+    "M. Bero",
+    "D. Kuciak",
+    "F. Plach",
+    "F. Kiss",
+    "J. Hromada",
+    "D. Ivan"
   ],
   "Peru": [
     "C. Pizarro",

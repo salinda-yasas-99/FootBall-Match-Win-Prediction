@@ -246,8 +246,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               return 'Please enter a temperature';
                             }
                             final temp = int.tryParse(value);
-                            if (temp == null || temp < 10 || temp > 30) {
-                              return 'Please enter a number between 10 and 30';
+                            if (temp == null || temp < 10 || temp > 40) {
+                              return 'Please enter a number between 10 and 40';
                             }
                             return null;
                           },
